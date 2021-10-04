@@ -10,7 +10,7 @@ const app = express();
 
 app.use(express.json());
 
-app.get('/api/notes', (req, res) => {
+app.get('/api/notes', (req, res, next) => {
     Note.find()
         .then(notes =>
             res.json(notes)
@@ -54,7 +54,7 @@ app.delete('/api/notes/:id', (req, res, next) => {
         .catch(err => next(err))
 })
 
-app.post('/api/notes', (req, res) => {
+app.post('/api/notes', (req, res, next) => {
     const { content, important } = req.body;
 
     const newNote = new Note({
