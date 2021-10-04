@@ -29,6 +29,19 @@ app.get('/api/notes/:id', (req, res, next) => {
         .catch(err => next(err))
 })
 
+app.post('/api/notes', (req, res, next) => {
+    const { content, important } = req.body;
+
+    const newNote = new Note({
+        date: new Date(),
+        content,
+        important,
+    })
+    newNote.save()
+        .then(note => res.json(note))
+        .catch(err => next(err))
+})
+
 app.put('/api/notes/:id', (req, res, next) => {
     const { id } = req.params
     const { content, important } = req.body;
@@ -54,18 +67,6 @@ app.delete('/api/notes/:id', (req, res, next) => {
         .catch(err => next(err))
 })
 
-app.post('/api/notes', (req, res, next) => {
-    const { content, important } = req.body;
-
-    const newNote = new Note({
-        date: new Date(),
-        content,
-        important,
-    })
-    newNote.save()
-        .then(note => res.json(note))
-        .catch(err => next(err))
-})
 
 app.use(notFound)
 app.use(handleErrors)
