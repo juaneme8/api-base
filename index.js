@@ -2,13 +2,17 @@ require('dotenv').config()
 require('./mongo')
 
 const express = require('express');
+const cors = require('cors');
+
 const Note = require('./models/Note');
+
 const notFound = require('./middleware/notFound');
 const handleErrors = require('./middleware/handleErrors');
 
 const app = express();
 
 app.use(express.json());
+app.use(cors());
 
 app.get('/api/notes', (req, res, next) => {
     Note.find()
