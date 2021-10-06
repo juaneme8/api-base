@@ -83,7 +83,10 @@ describe('GET /api/notes', () => {
 		const newNote = {
 			important: false,
 		};
-		await api.post('/api/notes').send(newNote).expect(200);
+		await api.post('/api/notes').send(newNote).expect(400);
+
+		const res = await api.get('/api/notes');
+		expect(res.body).toHaveLength(initialNotes.length);
 	});
 });
 
