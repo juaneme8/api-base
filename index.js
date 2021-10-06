@@ -70,7 +70,7 @@ app.delete('/api/notes/:id', (req, res, next) => {
 
 	Note.findByIdAndDelete(id)
 		.then(note => {
-			if (note) return res.json(note);
+			if (note) return res.status(204).json(note);
 			res.status(404).end();
 		})
 		.catch(err => next(err));
