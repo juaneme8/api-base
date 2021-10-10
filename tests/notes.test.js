@@ -17,7 +17,7 @@ beforeEach(async () => {
 	await note3.save();
 });
 
-describe('/api/notes', () => {
+describe('GET /api/notes', () => {
 	test('the result should be a json', async () => {
 		await api
 			.get('/api/notes')
@@ -41,6 +41,8 @@ describe('/api/notes', () => {
 
 		expect(contents).toContain('Notas de Paco');
 	});
+});
+describe('POST /api/notes', () => {
 	test('a new note should be added', async () => {
 		const newNote = {
 			content: 'Notas de De La Mar',
