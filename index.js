@@ -3,6 +3,7 @@ require('./mongo');
 
 const express = require('express');
 const cors = require('cors');
+const jwt = require('jsonwebtoken')
 
 const Note = require('./models/Note');
 
@@ -10,8 +11,11 @@ const notFound = require('./middleware/notFound');
 const handleErrors = require('./middleware/handleErrors');
 const usersRouter = require('./controller/users');
 const loginRouter = require('./controller/login');
+const User = require('./models/User');
+const userExtractor = require('./middleware/userExtractor');
 
 const app = express();
+
 
 app.use(express.json());
 app.use(cors());
@@ -36,24 +40,40 @@ app.get('/api/notes/:id', (req, res, next) => {
 		.catch(err => next(err));
 });
 
-app.post('/api/notes', (req, res, next) => {
+app.post('/api/notes', userExtractor, async (req, res, next) => {
 	const { content, important } = req.body;
 
-	if (!content) {
-		return res.status(400).json({
-			error: 'required "content" field is missing',
-		});
-	}
+	try {
 
-	const newNote = new Note({
-		date: new Date(),
-		content,
-		important,
-	});
-	newNote
-		.save()
-		.then(note => res.json(note))
-		.catch(err => next(err));
+		const { userId } = req;
+
+		const user = await User.findById(userId)
+
+
+		if (!user) {
+			return res.status(404).json({
+				error: 'user not found',
+			});
+		}
+		// console.log({ user })
+
+		const newNote = new Note({
+			date: new Date(),
+			content,
+			important,
+			user: user._id
+		});
+
+		user.notes = user.notes.concat(newNote._id)
+		await user.save()
+
+
+		const savedNote = await newNote.save()
+		res.json(savedNote);
+	}
+	catch (error) {
+		next(error)
+	}
 });
 
 app.put('/api/notes/:id', (req, res, next) => {
@@ -80,6 +100,7 @@ app.delete('/api/notes/:id', (req, res, next) => {
 		})
 		.catch(err => next(err));
 });
+
 
 app.use(notFound);
 app.use(handleErrors);
