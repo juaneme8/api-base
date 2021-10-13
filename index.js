@@ -9,6 +9,7 @@ const Note = require('./models/Note');
 const notFound = require('./middleware/notFound');
 const handleErrors = require('./middleware/handleErrors');
 const usersRouter = require('./controller/users');
+const loginRouter = require('./controller/login');
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use(cors());
 
 app.use('/api/users', usersRouter)
+app.use('/api/login', loginRouter)
 
 app.get('/api/notes', (req, res, next) => {
 	Note.find()
