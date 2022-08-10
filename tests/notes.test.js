@@ -45,6 +45,7 @@ describe('GET /api/notes', () => {
 describe('POST /api/notes', () => {
 	test('a new note should be added', async () => {
 		const newNote = {
+			userId: 1,
 			content: 'Notas de De La Mar',
 			important: false,
 		};
