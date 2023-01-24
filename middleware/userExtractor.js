@@ -4,8 +4,6 @@ module.exports = (request, response, next) => {
     const authorization = request.get('authorization')
     let token = ''
 
-    console.log('llega')
-
     if (authorization && authorization.toLowerCase().startsWith('bearer')) {
         token = authorization.substring(7)
     }
